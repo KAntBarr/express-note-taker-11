@@ -1,8 +1,9 @@
-const blogs = require('../db/db.json');
+const notes = require('../db/db.json');
 
 
 const getNotes = (req, res) => {
-    res.send("No notes. COME BACK LATER!");
+    console.log("Sending out notes in json.");
+    res.json(notes);
 }
 
 const createNote = (req, res) => {
