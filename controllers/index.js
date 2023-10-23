@@ -1,1 +1,6 @@
-console.log('controllers');
+const notesController = require('./notesController');
+
+
+module.exports = {
+    ...notesController
+}
