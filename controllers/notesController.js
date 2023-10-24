@@ -10,14 +10,14 @@ const getNotes = (req, res) => {
 
 const createNote = async (req, res) => {
 
-    const {title, text} = req.body;
+    const { title, text } = req.body;
 
-    if(!title) {
-        return res.status(400).json({error: "Title is required"})
+    if (!title) {
+        return res.status(400).json({ error: "Title is required" })
     }
 
-    if(!text) {
-        return res.status(400).json({error: "Text is required"})
+    if (!text) {
+        return res.status(400).json({ error: "Text is required" })
     }
 
     const newNote = new Note(title, text);
@@ -25,23 +25,38 @@ const createNote = async (req, res) => {
     notes.push(newNote);
 
     try {
-        const promise = fs.writeFile('./db/db.json',JSON.stringify(notes, null, 4));
-      
+        const promise = fs.writeFile('./db/db.json', JSON.stringify(notes, null, 4));
+
         await promise;
         res.send("Not creating note. COME BACK LATER!");
-      } catch (err) {
+    } catch (err) {
         // When a request is aborted - err is an AbortError
         console.error(err);
         res.status(500).json({ error: "Something went wrong" });
-      }
+    }
 }
 
 const editNote = (req, res) => {
     res.send("Not editing note. COME BACK LATER!")
 }
 
-const deleteNote = (req, res) => {
-    res.send("Not deleting note. COME BACK LATER!")
+const deleteNote = async (req, res) => {
+    console.log('delete note');
+    const requestedNoteID = req.params.id.toLowerCase();
+    const newNotes = notes.filter( note => note.id != requestedNoteID);
+
+    try {
+        const promise = fs.writeFile('./db/db.json', JSON.stringify(newNotes, null, 4));
+
+        await promise;
+        res.send("Not deleting note. COME BACK LATER!")
+    } catch (err) {
+        // When a request is aborted - err is an AbortError
+        console.error(err);
+        res.status(500).json({ error: "Something went wrong" });
+    }
+    
+
 }
 
 

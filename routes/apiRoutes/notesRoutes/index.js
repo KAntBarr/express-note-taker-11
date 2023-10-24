@@ -12,6 +12,6 @@ router.post('/', createNote);
 
 router.put('/', editNote);
 
-router.delete('/', deleteNote);
+router.delete('/:id', deleteNote);
 
 module.exports = router;
