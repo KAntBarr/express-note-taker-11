@@ -41,15 +41,17 @@ const editNote = (req, res) => {
 }
 
 const deleteNote = async (req, res) => {
-    console.log('delete note');
     const requestedNoteID = req.params.id.toLowerCase();
     const newNotes = notes.filter( note => note.id != requestedNoteID);
-
+    
     try {
         const promise = fs.writeFile('./db/db.json', JSON.stringify(newNotes, null, 4));
-
+        console.log('delete note1');
+        
         await promise;
+        console.log('delete note2');
         res.send("Not deleting note. COME BACK LATER!")
+        console.log('delete note3');
     } catch (err) {
         // When a request is aborted - err is an AbortError
         console.error(err);

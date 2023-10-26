@@ -1,8 +1,11 @@
+"use strict";
 let noteTitle;
 let noteText;
 let saveNoteBtn;
 let newNoteBtn;
 let noteList;
+
+let lock = 0;
 
 if (window.location.pathname === '/notes') {
   noteTitle = document.querySelector('.note-title');
@@ -25,13 +28,17 @@ const hide = (elem) => {
 // activeNote is used to keep track of the note in the textarea
 let activeNote = {};
 
-const getNotes = () =>
-  fetch('/api/notes', {
+const getNotes = () => {
+  // while (!lock) setTimeout(() => console.log('timeout - get notes'), 100);
+  console.log('getting notes');
+  
+  return fetch('/api/notes', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
     },
   });
+}
 
 const saveNote = (note) =>
   fetch('/api/notes', {
@@ -78,7 +85,7 @@ const handleNoteSave = () => {
 };
 
 // Delete the clicked note
-const handleNoteDelete = (e) => {
+const handleNoteDelete = async (e) => {
   // Prevents the click listener for the list from being called when the button inside of it is clicked
   e.stopPropagation();
 
@@ -88,11 +95,16 @@ const handleNoteDelete = (e) => {
   if (activeNote.id === noteId) {
     activeNote = {};
   }
-  console.log("delete1");
+  // while( !lock ) setTimeout(() => console.log('timeout - lock'), 100);
+  // lock = 1;
   deleteNote(noteId).then(() => {
-    getAndRenderNotes();
-    renderActiveNote();
+    console.log("delete1");
+    setTimeout(() => {
+      getAndRenderNotes();
+      renderActiveNote();
+    }, 100);
   });
+  // lock = 0;
 };
 
 // Sets the activeNote and displays it
