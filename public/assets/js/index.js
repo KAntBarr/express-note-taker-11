@@ -102,7 +102,7 @@ const handleNoteDelete = async (e) => {
     setTimeout(() => {
       getAndRenderNotes();
       renderActiveNote();
-    }, 100);
+    }, 200);
   });
   // lock = 0;
 };
