@@ -4,6 +4,7 @@ let noteText;
 let saveNoteBtn;
 let newNoteBtn;
 let noteList;
+let renderNoteInterval;
 
 let lock = 0;
 
@@ -31,7 +32,7 @@ let activeNote = {};
 const getNotes = () => {
   // while (!lock) setTimeout(() => console.log('timeout - get notes'), 100);
   console.log('getting notes');
-  
+
   return fetch('/api/notes', {
     method: 'GET',
     headers: {
@@ -99,10 +100,10 @@ const handleNoteDelete = async (e) => {
   // lock = 1;
   deleteNote(noteId).then(() => {
     console.log("delete1");
-    setTimeout(() => {
-      getAndRenderNotes();
-      renderActiveNote();
-    }, 200);
+    renderActiveNote();
+    // setTimeout(() => {
+    //   getAndRenderNotes();
+    // }, 200);
   });
   // lock = 0;
 };
@@ -182,8 +183,16 @@ const renderNoteList = async (notes) => {
   }
 };
 
+
+
 // Gets notes from the db and renders them to the sidebar
-const getAndRenderNotes = () => getNotes().then(renderNoteList);
+const getAndRenderNotes = () => 
+getNotes()
+.then(renderNoteList)
+.catch((error) => {
+  console.log(error);
+  clearInterval(renderNoteInterval);
+});
 
 if (window.location.pathname === '/notes') {
   saveNoteBtn.addEventListener('click', handleNoteSave);
@@ -192,4 +201,9 @@ if (window.location.pathname === '/notes') {
   noteText.addEventListener('keyup', handleRenderSaveBtn);
 }
 
+
 getAndRenderNotes();
+
+renderNoteInterval = setInterval(() => {
+  getAndRenderNotes();
+}, 1000); 
